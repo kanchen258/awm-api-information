@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Public information about AWM's use of public product information APIs.">
-    <title>AWM | Public Product Information API Usage</title>
+    <meta name="description" content="A public product search entry point.">
+    <title>Product Finder | Public Beta</title>
     <style>
       :root {
         color-scheme: dark;
@@ -12,12 +12,12 @@
       }
       * { box-sizing: border-box; }
       body {
-        margin: 0;
         min-height: 100vh;
-        background: radial-gradient(circle at 15% 0%, #173b70 0, #0a1323 39rem), #0a1323;
+        margin: 0;
+        background: radial-gradient(circle at 16% 0%, #173b70 0, #0a1323 42rem), #0a1323;
         color: #edf4ff;
       }
-      main { max-width: 860px; margin: 0 auto; padding: 72px 24px 48px; }
+      main { width: min(100% - 40px, 760px); margin: 0 auto; padding: 78px 0 48px; }
       .eyebrow {
         display: inline-block;
         margin-bottom: 18px;
@@ -27,85 +27,104 @@
         color: #b9d7ff;
         font-size: .78rem;
         font-weight: 700;
-        letter-spacing: .08em;
+        letter-spacing: .09em;
         text-transform: uppercase;
       }
-      h1 { margin: 0; font-size: clamp(2.5rem, 8vw, 5rem); letter-spacing: -.055em; line-height: .98; }
-      .subtitle { margin: 20px 0 0; max-width: 690px; color: #b9c8dd; font-size: clamp(1.05rem, 2.5vw, 1.25rem); line-height: 1.8; }
-      .notice {
-        margin-top: 38px;
-        padding: 20px 22px;
-        border: 1px solid #326db8;
-        border-radius: 16px;
-        background: rgba(24, 65, 119, .34);
-        color: #d9eaff;
-        line-height: 1.75;
+      h1 { margin: 0; font-size: clamp(2.7rem, 9vw, 5.4rem); letter-spacing: -.06em; line-height: .95; }
+      .lead { max-width: 640px; margin: 22px 0 0; color: #b9c8dd; font-size: clamp(1.05rem, 2.4vw, 1.22rem); line-height: 1.8; }
+      .search-card, section {
+        border: 1px solid #263a59;
+        border-radius: 20px;
+        background: rgba(14, 28, 49, .9);
       }
-      .grid { display: grid; gap: 18px; margin-top: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      section { padding: 26px; border: 1px solid #263a59; border-radius: 18px; background: rgba(14, 28, 49, .88); }
-      section.wide { margin-top: 18px; }
-      h2 { margin: 0 0 12px; font-size: 1.1rem; }
+      .search-card { margin-top: 38px; padding: 24px; }
+      label { display: block; margin-bottom: 10px; color: #d8e7fb; font-weight: 700; }
+      .search-row { display: flex; gap: 10px; }
+      input {
+        min-width: 0;
+        flex: 1;
+        border: 1px solid #4878b8;
+        border-radius: 12px;
+        padding: 14px 15px;
+        background: #081323;
+        color: #edf4ff;
+        font: inherit;
+      }
+      input:focus { outline: 3px solid rgba(113, 177, 255, .45); outline-offset: 2px; }
+      button {
+        border: 0;
+        border-radius: 12px;
+        padding: 14px 18px;
+        background: #4f9df8;
+        color: #06101e;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      button:hover { background: #77b6ff; }
+      .hint { margin: 14px 0 0; color: #91a7c4; font-size: .9rem; line-height: 1.65; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 18px; }
+      section { padding: 24px; }
+      h2 { margin: 0 0 12px; font-size: 1.05rem; }
       p, li { color: #c6d3e5; line-height: 1.8; }
       p { margin: 0; }
-      ul { margin: 0; padding-left: 1.2rem; }
+      ol { margin: 0; padding-left: 1.25rem; }
       li + li { margin-top: 7px; }
-      .english { margin-top: 14px; color: #91a7c4; font-size: .94rem; }
-      .updated { margin: 18px 0 0; color: #d8e4f3; font-size: .88rem; }
-      .disclaimer { max-width: 720px; margin: 10px auto 0; color: #91a7c4; font-size: .82rem; line-height: 1.65; }
-      .contact { margin-top: 18px; text-align: center; }
-      a { color: #9dcbff; font-weight: 650; }
-      footer { margin-top: 40px; color: #7f94b1; font-size: .88rem; text-align: center; }
-      @media (max-width: 640px) { main { padding-top: 52px; } .grid { grid-template-columns: 1fr; } }
+      .english { margin-top: 12px; color: #91a7c4; font-size: .9rem; }
+      footer { margin-top: 34px; color: #7f94b1; font-size: .82rem; line-height: 1.7; text-align: center; }
+      @media (max-width: 620px) {
+        main { width: min(100% - 32px, 760px); padding-top: 54px; }
+        .search-row, .grid { grid-template-columns: 1fr; display: grid; }
+        button { width: 100%; }
+      }
     </style>
   </head>
   <body>
     <main>
-      <span class="eyebrow">Public API Information</span>
-      <h1>AWM Public Product Information API Usage</h1>
-      <p class="subtitle">楽天市場の公開商品情報を、社内での商品照合・カタログ確認・価格参照・商品分析に利用するための公開説明ページです。</p>
+      <span class="eyebrow">Public beta</span>
+      <h1>Find a product</h1>
+      <p class="lead">キーワードまたは商品コードから、商品をすばやく探せます。アカウント登録は不要です。</p>
+      <p class="lead english">Search for products by keyword or product code. No account is required.</p>
 
-      <div class="notice">
-        AWM only uses publicly available Rakuten Ichiba product information. This page does not provide access to an AWM system, database, server, or API credential.
-      </div>
+      <form class="search-card" id="product-search">
+        <label for="query">キーワード / 商品コード</label>
+        <div class="search-row">
+          <input id="query" name="query" type="search" autocomplete="off" placeholder="例: wireless keyboard" required>
+          <button type="submit">検索する</button>
+        </div>
+        <p class="hint">検索結果は楽天市場の公式検索ページで開きます。</p>
+      </form>
 
       <div class="grid">
         <section>
-          <h2>利用目的</h2>
-          <p>公開商品情報をもとに、SKU 照合、商品情報の確認、価格参照および社内の商品分析を支援します。</p>
-          <p class="english">AWM uses public product information for internal SKU matching, catalogue review, price reference and product analysis.</p>
+          <h2>使い方</h2>
+          <ol>
+            <li>商品名、型番、またはキーワードを入力します。</li>
+            <li>検索ボタンを押します。</li>
+            <li>公式の検索結果ページで商品を確認します。</li>
+          </ol>
+          <p class="english">Enter a product name, model number, or keyword, then continue to the official marketplace results.</p>
         </section>
         <section>
-          <h2>取得する情報</h2>
-          <p>商品名、価格、店舗情報、レビュー情報、公開されている販売状態など、楽天市場で公開されている商品情報のみを対象とします。</p>
-          <p class="english">Only public item details, such as titles, prices, shop information, review signals and public availability, are requested.</p>
+          <h2>プライバシー</h2>
+          <p>このページは検索語を保存せず、商品データやアカウント情報を収集しません。</p>
+          <p class="english">This page does not store search terms or collect product data or account information.</p>
         </section>
       </div>
 
-      <section class="wide">
-        <h2>取得しない情報と安全管理</h2>
-        <ul>
-          <li>店舗の非公開在庫数、注文情報、顧客情報、決済情報は、この公開 API 利用では取得しません。</li>
-          <li>API 認証情報は非公開の環境で管理し、この公開サイトやクライアント側のソースには掲載しません。</li>
-          <li>AWM のサーバーアドレス、データベース、バックアップ、ログ、運用データは公開しません。</li>
-          <li>API リクエストは、該当する楽天 Web Service の要件に合わせて、必要に応じたキャッシュとレート制限を行います。</li>
-        </ul>
-        <p class="english">Private inventory quantities, orders, customer data and payment data are not requested. Credentials and operational systems are not published. API requests are rate-limited and cached where appropriate.</p>
-      </section>
-
-      <section class="wide contact">
-        <h2>お問い合わせ / Contact</h2>
-        <p>本ページまたは公開 API 利用に関するお問い合わせは、<a href="https://github.com/kanchen258/awm-api-information/issues">GitHub Issues</a> からお願いします。</p>
-      </section>
-
       <footer>
-        <div>AWM Public API Usage Information</div>
-        <!-- Rakuten Web Services Attribution Snippet FROM HERE -->
-        <p class="updated"><a href="https://developers.rakuten.com/" target="_blank">Supported by Rakuten Developers</a></p>
-        <!-- Rakuten Web Services Attribution Snippet TO HERE -->
-        <p class="updated">最終更新日: 2026年8月12日 | Last updated: August 12, 2026</p>
-        <p class="disclaimer">本ページは AWM が運営する独立した情報ページです。楽天グループ株式会社、楽天市場またはこれらの関連会社による提携、推奨、承認、公式な関係を示すものではありません。</p>
-        <p class="disclaimer english">This page is independently operated by AWM and does not imply affiliation with, endorsement by, authorization from, or an official relationship with Rakuten Group, Inc., Rakuten Ichiba, or their affiliates.</p>
+        Public beta · No account required<br>
+        This independent page is not affiliated with or endorsed by the destination marketplace.
       </footer>
     </main>
+    <script>
+      document.getElementById('product-search').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const query = document.getElementById('query').value.trim();
+        if (query) {
+          window.location.assign('https://search.rakuten.co.jp/search/mall/' + encodeURIComponent(query) + '/');
+        }
+      });
+    </script>
   </body>
 </html>
